@@ -30,6 +30,7 @@ export interface TSCommon {
 
   // TypeScript 1.5+, 1.7+ added `fileExists` parameter.
   findConfigFile (path: string, fileExists?: (path: string) => boolean): string
+  normalizeSlashes? (path: string): string
 
   // TypeScript 1.5+, 1.7+ added `readFile` parameter.
   readConfigFile (path: string, readFile?: (path: string) => string): {
@@ -325,7 +326,7 @@ function readConfig (options: Options, cwd: string, ts: TSCommon) {
   let project: string
 
   if (options.project == null) {
-    const path = ts.findConfigFile(cwd, options.fileExists)
+    const path = ts.findConfigFile(ts.normalizeSlashes(cwd), options.fileExists)
 
     project = path ? resolve(path) : undefined
   } else if (typeof options.project === 'string') {
